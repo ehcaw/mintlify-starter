@@ -15,14 +15,21 @@
         "groups": [
           {
             "group": "Getting started",
+            "public": true,
             "pages": [
               "index",
-              "quickstart",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Development",
+            "pages": [
               "development"
             ]
           },
           {
             "group": "Customization",
+            "public": true,
             "pages": [
               "essentials/settings",
               "essentials/navigation"
@@ -30,6 +37,7 @@
           },
           {
             "group": "Writing content",
+            "public": true,
             "pages": [
               "essentials/markdown",
               "essentials/code",
@@ -39,6 +47,7 @@
           },
           {
             "group": "AI tools",
+            "public": true,
             "pages": [
               "ai-tools/cursor",
               "ai-tools/claude-code",
@@ -52,17 +61,31 @@
         "groups": [
           {
             "group": "API documentation",
+            "public": true,
             "pages": [
               "api-reference/introduction"
             ]
           },
           {
             "group": "Endpoint examples",
+            "public": true,
             "pages": [
               "api-reference/endpoint/get",
               "api-reference/endpoint/create",
               "api-reference/endpoint/delete",
               "api-reference/endpoint/webhook"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Private",
+        "groups": [
+          {
+            "group": "Internal",
+            "pages": [
+              "private/overview",
+              "private/secrets"
             ]
           }
         ]
