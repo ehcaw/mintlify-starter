@@ -28,6 +28,12 @@
             ]
           },
           {
+            "group": "Changelog",
+            "pages": [
+              "changelog"
+            ]
+          },
+          {
             "group": "Customization",
             "public": true,
             "pages": [
