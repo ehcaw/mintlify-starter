@@ -1,0 +1,184 @@
+asyncapi: 3.0.0
+info:
+  title: Spider-Man Event API
+  version: 1.0.0
+  description: >
+    An event-driven API for the friendly neighborhood Spider-Man. Subscribe to
+    spidey-sense alerts and villain sightings, and publish web-swing telemetry
+    and crime-stopping reports across the city.
+  contact:
+    name: Friendly Neighborhood Support
+    email: peter.parker@dailybugle.example
+  license:
+    name: With Great Power License 1.0
+
+servers:
+  production:
+    host: broker.spiderverse.example
+    protocol: mqtt
+    description: Production MQTT broker covering all of New York City.
+  development:
+    host: localhost:1883
+    protocol: mqtt
+    description: Local broker for testing in Aunt May's basement.
+
+channels:
+  spideySense:
+    address: spiderman/spidey-sense
+    description: Tingling alerts pushed to Spider-Man when danger is near.
+    messages:
+      spideySenseTriggered:
+        $ref: '#/components/messages/SpideySenseTriggered'
+  villainSightings:
+    address: spiderman/villains/sightings
+    description: Reports of known villains spotted around the city.
+    messages:
+      villainSpotted:
+        $ref: '#/components/messages/VillainSpotted'
+  webSwingTelemetry:
+    address: spiderman/telemetry/web-swing
+    description: Live telemetry streamed while Spider-Man is swinging.
+    messages:
+      webSwingUpdate:
+        $ref: '#/components/messages/WebSwingUpdate'
+  rescueReports:
+    address: spiderman/rescues
+    description: Reports filed after a civilian is rescued.
+    messages:
+      civilianRescued:
+        $ref: '#/components/messages/CivilianRescued'
+
+operations:
+  receiveSpideySense:
+    action: receive
+    channel:
+      $ref: '#/channels/spideySense'
+    summary: Listen for spidey-sense danger alerts.
+  receiveVillainSightings:
+    action: receive
+    channel:
+      $ref: '#/channels/villainSightings'
+    summary: Listen for villain sighting reports.
+  sendWebSwingTelemetry:
+    action: send
+    channel:
+      $ref: '#/channels/webSwingTelemetry'
+    summary: Publish live web-swing telemetry.
+  sendRescueReport:
+    action: send
+    channel:
+      $ref: '#/channels/rescueReports'
+    summary: Publish a civilian rescue report.
+
+components:
+  messages:
+    SpideySenseTriggered:
+      name: spideySenseTriggered
+      title: Spidey-Sense Triggered
+      summary: Emitted the instant Peter's spidey-sense starts tingling.
+      payload:
+        $ref: '#/components/schemas/SpideySensePayload'
+    VillainSpotted:
+      name: villainSpotted
+      title: Villain Spotted
+      summary: Emitted when a known villain is reported in the city.
+      payload:
+        $ref: '#/components/schemas/VillainPayload'
+    WebSwingUpdate:
+      name: webSwingUpdate
+      title: Web-Swing Telemetry Update
+      summary: Periodic telemetry sample during a swing.
+      payload:
+        $ref: '#/components/schemas/WebSwingPayload'
+    CivilianRescued:
+      name: civilianRescued
+      title: Civilian Rescued
+      summary: Emitted after a civilian has been safely rescued.
+      payload:
+        $ref: '#/components/schemas/RescuePayload'
+
+  schemas:
+    SpideySensePayload:
+      type: object
+      required:
+        - intensity
+        - timestamp
+      properties:
+        intensity:
+          type: integer
+          minimum: 1
+          maximum: 10
+          description: How strongly the spidey-sense is tingling.
+        direction:
+          type: string
+          enum: [north, south, east, west, up, down]
+          description: Direction the danger is coming from.
+        location:
+          $ref: '#/components/schemas/Location'
+        timestamp:
+          type: string
+          format: date-time
+    VillainPayload:
+      type: object
+      required:
+        - name
+        - threatLevel
+      properties:
+        name:
+          type: string
+          examples: [Green Goblin, Doctor Octopus, Venom, Sandman]
+        threatLevel:
+          type: string
+          enum: [low, moderate, high, catastrophic]
+        location:
+          $ref: '#/components/schemas/Location'
+        spottedBy:
+          type: string
+          description: Who reported the sighting.
+    WebSwingPayload:
+      type: object
+      required:
+        - speedMph
+        - altitudeFeet
+      properties:
+        speedMph:
+          type: number
+          description: Current swing speed in miles per hour.
+        altitudeFeet:
+          type: number
+          description: Height above street level in feet.
+        webFluidPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Remaining web fluid in the cartridges.
+        location:
+          $ref: '#/components/schemas/Location'
+    RescuePayload:
+      type: object
+      required:
+        - civilianCount
+        - timestamp
+      properties:
+        civilianCount:
+          type: integer
+          minimum: 1
+          description: Number of civilians rescued in this incident.
+        injuries:
+          type: boolean
+          description: Whether any rescued civilian was injured.
+        location:
+          $ref: '#/components/schemas/Location'
+        timestamp:
+          type: string
+          format: date-time
+    Location:
+      type: object
+      properties:
+        borough:
+          type: string
+          examples: [Manhattan, Queens, Brooklyn, The Bronx, Staten Island]
+        latitude:
+          type: number
+        longitude:
+          type: number
